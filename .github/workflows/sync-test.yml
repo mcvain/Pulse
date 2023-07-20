@@ -31,4 +31,4 @@ jobs:
       env:
         TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       run: |
-        git push https://github.com/LuResearchGroup/Pulse.git ${{ steps.get_branch.outputs.branch }}
+        git push "https://${TOKEN}@github.com/LuResearchGroup/Pulse.git" ${{ steps.get_branch.outputs.branch }}
