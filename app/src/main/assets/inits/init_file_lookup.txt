@@ -1,4 +1,19 @@
-PPG Tattoo, ppg_v2.init
-E-TATTOO, ecg_scg_v1.init
-PPG Dev Board, ppg_v2.init
-ADXL355, adxl355_test.init
+Debug Mode, debug.init
+PPG Tattoo v3.2, ppg_max86141.init
+EEG-Test_v1, eeg_tattoo_v1.init
+EEG-Test_v2, eeg_tattoo_v2.init
+EEG-Test, eeg_tattoo.init
+Pneumonia_v2.0, pneumonia_v2.init
+MAX30102 Test, ppg_max30102.init
+core-hydration, max30002.init
+MAX30002_ICG, max30002_icg.init
+Chest_v3.1, ecg_scg_v2_5.init
+Chest_HR, ecg_scg_v2.init
+Ear_Tattoo_v1.0, ear_v1.init
+NICBP, nicbp.init
+ADXL355, adxl355_125.init
+Radu_b1, ecg_scg_v2.init
+Radu_b2, ecg_scg_v2.init
+Radu_b3, ecg_scg_v2.init
+Dual_SCG, dualSCG.init
+NICBP, nicbp.init

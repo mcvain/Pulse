@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="tan.philip.nrf_ble">
+    package="tan.philip.nrf_ble" >
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -9,12 +9,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-
-    <uses-feature
-        android:name="android.hardware.bluetooth_le"
-        android:required="true" />
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
@@ -23,9 +20,16 @@
         android:allowBackup="true"
         android:icon="@drawable/heartrate"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:usesCleartextTraffic="true"
+        android:theme="@style/AppTheme" >
+        <service
+            android:name=".SickbayPush.SickbayPushService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
         <activity
             android:name=".GraphScreen.GraphActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -33,25 +37,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ScanListScreen.ScanResultsActivity"
-            android:label="@string/title_activity_scan_results"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ScanScreen.ClientActivity"
+            android:name=".ScanScreen.ScanningActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScanScreen.TestUI" />
-
-        <service android:name=".BLE.BluetoothLeService"></service>
-        <service android:name=".BLE.BLEHandlerService"></service>
+        <service android:name=".BLE.BLEHandlerService" />
     </application>
 
 </manifest>

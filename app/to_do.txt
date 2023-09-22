@@ -1,0 +1,8 @@
+SickbayPush
+- Let the IP address be setable
+- Turn on/off Sickbay push
+
+Set a default color
+Remove sync for single device?
+If no sickbay push, stop trying to add to queue. Currently, getting tons of errors
+since the SickbayPushService is dead
