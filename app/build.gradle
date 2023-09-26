@@ -45,4 +45,7 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
     implementation("org.greenrobot:eventbus:3.3.1")
+    
+    implementation files('libs/liblsl-Java-debug.aar')
+    //implementation project(':libs:liblsl-Java')
 }
