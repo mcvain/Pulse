@@ -32,11 +32,15 @@ public class BLEPacketParser {
     public String sickbayNS = null;
 
     //LSL variables
-    public LSL.StreamInfo scg_info;
+    public LSL.StreamInfo scg_x_info;
+    public LSL.StreamInfo scg_y_info;
+    public LSL.StreamInfo scg_z_info;
     public LSL.StreamInfo ecg_info;
     public LSL.StreamInfo temp_info;
     public LSL.StreamInfo packet_info;
-    public LSL.StreamOutlet scg_outlet;
+    public LSL.StreamOutlet scg_x_outlet;
+    public LSL.StreamOutlet scg_y_outlet;
+    public LSL.StreamOutlet scg_z_outlet;
     public LSL.StreamOutlet ecg_outlet;
     public LSL.StreamOutlet temp_outlet;
     public LSL.StreamOutlet packet_outlet;
@@ -104,11 +108,24 @@ public class BLEPacketParser {
 
             // Send to LSL before storing into ArrayList
             int[] dataArr = new int[]{cur_data};
-            if (index == 4) {
-                ecg_outlet.push_chunk(dataArr, packet_received_time);
-            }
-            if (index == 6) {
-                packet_outlet.push_chunk(dataArr, packet_received_time);
+            switch (index) {
+                case 1:
+                    scg_x_outlet.push_chunk(dataArr, packet_received_time);
+                    break;
+                case 2:
+                    scg_y_outlet.push_chunk(dataArr, packet_received_time);
+                    break;
+                case 3:
+                    scg_z_outlet.push_chunk(dataArr, packet_received_time);
+                    break;
+                case 4:
+                    ecg_outlet.push_chunk(dataArr, packet_received_time);
+                    break;
+                case 5:
+                    packet_outlet.push_chunk(dataArr, packet_received_time);
+                    break;
+                default:
+                    break;
             }
 
             //Store the parsed data into the correct ArrayList
@@ -264,13 +281,17 @@ public class BLEPacketParser {
 
         // LSL initialization after parsing .init file.
         // fs, names, etc. are hard-coded for now but should make use of parsed values from init file loop above.
-        scg_info = new LSL.StreamInfo("Pulse-SCG","SCG",3, 125, LSL.ChannelFormat.float32,"myuid4563");
+        scg_x_info = new LSL.StreamInfo("Pulse-SCGX","SCG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
+        scg_y_info = new LSL.StreamInfo("Pulse-SCGY","SCG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
+        scg_z_info = new LSL.StreamInfo("Pulse-SCGZ","SCG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
         ecg_info = new LSL.StreamInfo("Pulse-ECG","ECG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
         temp_info = new LSL.StreamInfo("Pulse-Temp","misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
         packet_info = new LSL.StreamInfo("Pulse-Packet","misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
 
         try {
-            scg_outlet = new LSL.StreamOutlet(scg_info);
+            scg_x_outlet = new LSL.StreamOutlet(scg_x_info);
+            scg_y_outlet = new LSL.StreamOutlet(scg_y_info);
+            scg_z_outlet = new LSL.StreamOutlet(scg_z_info);
             ecg_outlet = new LSL.StreamOutlet(ecg_info);
             temp_outlet = new LSL.StreamOutlet(temp_info);
             packet_outlet = new LSL.StreamOutlet(packet_info);
