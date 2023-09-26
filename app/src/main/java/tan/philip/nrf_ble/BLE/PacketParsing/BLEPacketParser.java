@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
+import edu.ucsd.sccn.LSL;
 import tan.philip.nrf_ble.Algorithms.BiometricsSet;
 import tan.philip.nrf_ble.GraphScreen.UIComponents.Filter;
 
@@ -29,6 +30,16 @@ public class BLEPacketParser {
 
     //Sickbay settings
     public String sickbayNS = null;
+
+    //LSL variables
+    public LSL.StreamInfo scg_info;
+    public LSL.StreamInfo ecg_info;
+    public LSL.StreamInfo temp_info;
+    public LSL.StreamInfo packet_info;
+    public LSL.StreamOutlet scg_outlet;
+    public LSL.StreamOutlet ecg_outlet;
+    public LSL.StreamOutlet temp_outlet;
+    public LSL.StreamOutlet packet_outlet;
 
     //Use this to instantiate a new BLEPackageParser object
     public BLEPacketParser(Context context, String deviceName) throws FileNotFoundException {
@@ -53,6 +64,9 @@ public class BLEPacketParser {
 
     public HashMap<Integer, ArrayList<Integer>> parsePacket(byte[] data) {
         HashMap<Integer, ArrayList<Integer>> parsedData = new HashMap();
+
+        double packet_received_time = LSL.local_clock();
+
         for (Integer i : signalSettings.keySet()) {
             parsedData.put(i, new ArrayList<>());
         }
@@ -86,6 +100,12 @@ public class BLEPacketParser {
 
                     cur_data = (cur_data | (cur_byte) << (8 * j));        //Shift new bytes by however many bytes there are already in cur_data.. This is for little Endian
                 }
+            }
+
+            // Send to LSL before storing into ArrayList
+            int[] dataArr = new int[]{cur_data};
+            if (index == 6) {
+                packet_outlet.push_chunk(dataArr, packet_received_time);
             }
 
             //Store the parsed data into the correct ArrayList
@@ -238,6 +258,24 @@ public class BLEPacketParser {
             if (i >= lines.size())
                 break;
         }
+
+        // LSL initialization after parsing .init file.
+        // fs, names, etc. are hard-coded for now but should make use of parsed values from init file loop above.
+        scg_info = new LSL.StreamInfo("Pulse-SCG","SCG",3, 125, LSL.ChannelFormat.float32,"myuid4563");
+        ecg_info = new LSL.StreamInfo("Pulse-ECG","ECG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
+        temp_info = new LSL.StreamInfo("Pulse-Temp","misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
+        packet_info = new LSL.StreamInfo("Pulse-Packet","misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
+
+        try {
+            scg_outlet = new LSL.StreamOutlet(scg_info);
+            ecg_outlet = new LSL.StreamOutlet(ecg_info);
+            temp_outlet = new LSL.StreamOutlet(temp_info);
+            packet_outlet = new LSL.StreamOutlet(packet_info);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public HashMap<Integer, SignalSetting> getSignalSettings() {

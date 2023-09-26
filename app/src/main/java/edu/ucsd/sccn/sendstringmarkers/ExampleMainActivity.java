@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import edu.ucsd.sccn.LSL;
 
-public class MainActivity extends Activity
+public class ExampleMainActivity extends Activity
 {
 
     private static TextView tv;

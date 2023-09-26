@@ -24,6 +24,9 @@ import tan.philip.nrf_ble.Events.Sickbay.SickbaySendFloatsEvent;
 import tan.philip.nrf_ble.Events.TMSMessageReceivedEvent;
 import tan.philip.nrf_ble.GraphScreen.GraphSignal;
 
+import edu.ucsd.sccn.LSL;
+import tan.philip.nrf_ble.BLE.PacketParsing.BLEPacketParser;
+
 public class BLETattooDevice extends BLEDevice {
     private final ArrayList<GraphSignal> graphSignals;
     private long timestamps[] = new long[1000];
@@ -43,6 +46,7 @@ public class BLETattooDevice extends BLEDevice {
     }
 
     public void processNUSPacket(byte[] messageBytes) {
+
         if(mRecording) {
             saveToFile(messageBytes);
             recordTime += (1.0f / mBLEParser.getNotificationFrequency());
@@ -57,7 +61,6 @@ public class BLETattooDevice extends BLEDevice {
         }
 
         HashMap<Integer, ArrayList<Integer>> packaged_data = convertPacketToHashMap(messageBytes);
-
 
         HashMap<Integer, ArrayList<Float>> filtered_data = convertPacketForDisplay(packaged_data);
         //Send data to SickbayPushService to be sent over web sockets
