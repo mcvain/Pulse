@@ -26,6 +26,7 @@ public class BLEDevice {
     protected int instanceId = 0; //If there are multiple of the same device, this is used for preventing file saving conflicts.
     protected int uniqueID; //A new unique ID is generated for every device, regardless if they are unique devices.
     protected String displayName;
+    protected String connectedAddress;
 
     protected BLEPacketParser mBLEParser;
 
@@ -54,14 +55,16 @@ public class BLEDevice {
         //Temporary solution. Use GattCallback to populate this. TO DO
         mServiceUUIDs.add(NUS_UUID);
 
-        if(bluetoothDevice != null)
+        if(bluetoothDevice != null) {
             displayName = bluetoothDevice.getName();
+            connectedAddress = bluetoothDevice.getAddress();
+        }
         else
             displayName = DEBUG_MODE_BT_ID;
         if (displayName == null)
             displayName = "Unknown";
 
-        mBLEParser = new BLEPacketParser(mCtx, displayName);
+        mBLEParser = new BLEPacketParser(mCtx, displayName, connectedAddress);
 
         //Register on EventBus
         //EventBus.getDefault().register(this);

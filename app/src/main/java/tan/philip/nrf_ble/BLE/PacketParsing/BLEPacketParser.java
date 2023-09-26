@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import edu.ucsd.sccn.LSL;
+import tan.philip.nrf_ble.BLE.BLEHandlerService;
 import tan.philip.nrf_ble.Algorithms.BiometricsSet;
 import tan.philip.nrf_ble.GraphScreen.UIComponents.Filter;
 
@@ -44,9 +45,10 @@ public class BLEPacketParser {
     public LSL.StreamOutlet ecg_outlet;
     public LSL.StreamOutlet temp_outlet;
     public LSL.StreamOutlet packet_outlet;
+    private String connected_device_address;
 
     //Use this to instantiate a new BLEPackageParser object
-    public BLEPacketParser(Context context, String deviceName) throws FileNotFoundException {
+    public BLEPacketParser(Context context, String deviceName, String connectedAddress) throws FileNotFoundException {
         signalSettings = new HashMap<>();
         signalOrder = new ArrayList<>();
         rxMessages = new ArrayList<>();
@@ -61,6 +63,8 @@ public class BLEPacketParser {
             Log.e(TAG, "initFileName is null.");
             throw new FileNotFoundException();
         }
+
+        connected_device_address = connectedAddress;
 
         //Load in the init file
         parseInitFile(initFileName, context);
@@ -109,20 +113,23 @@ public class BLEPacketParser {
             // Send to LSL before storing into ArrayList
             int[] dataArr = new int[]{cur_data};
             switch (index) {
-                case 1:
+                case 0:
                     scg_x_outlet.push_chunk(dataArr, packet_received_time);
                     break;
-                case 2:
+                case 1:
                     scg_y_outlet.push_chunk(dataArr, packet_received_time);
                     break;
-                case 3:
+                case 2:
                     scg_z_outlet.push_chunk(dataArr, packet_received_time);
                     break;
-                case 4:
+                case 3:
                     ecg_outlet.push_chunk(dataArr, packet_received_time);
                     break;
-                case 5:
+                case 4:
                     packet_outlet.push_chunk(dataArr, packet_received_time);
+                    break;
+                case 5:
+                    temp_outlet.push_chunk(dataArr, packet_received_time);
                     break;
                 default:
                     break;
@@ -281,12 +288,13 @@ public class BLEPacketParser {
 
         // LSL initialization after parsing .init file.
         // fs, names, etc. are hard-coded for now but should make use of parsed values from init file loop above.
-        scg_x_info = new LSL.StreamInfo("Pulse-SCGX","SCG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
-        scg_y_info = new LSL.StreamInfo("Pulse-SCGY","SCG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
-        scg_z_info = new LSL.StreamInfo("Pulse-SCGZ","SCG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
-        ecg_info = new LSL.StreamInfo("Pulse-ECG","ECG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
-        temp_info = new LSL.StreamInfo("Pulse-Temp","misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
-        packet_info = new LSL.StreamInfo("Pulse-Packet","misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
+
+        scg_x_info = new LSL.StreamInfo("Pulse-SCGX-"+connected_device_address,"SCG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
+        scg_y_info = new LSL.StreamInfo("Pulse-SCGY-"+connected_device_address,"SCG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
+        scg_z_info = new LSL.StreamInfo("Pulse-SCGZ-"+connected_device_address,"SCG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
+        ecg_info = new LSL.StreamInfo("Pulse-ECG-"+connected_device_address,"ECG",1, 125, LSL.ChannelFormat.float32,"myuid4563");
+        temp_info = new LSL.StreamInfo("Pulse-Temp-"+connected_device_address,"misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
+        packet_info = new LSL.StreamInfo("Pulse-Packet-"+connected_device_address,"misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
 
         try {
             scg_x_outlet = new LSL.StreamOutlet(scg_x_info);
