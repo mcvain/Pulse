@@ -1,2 +1,3 @@
 include ':app'
+include ':liblsl-Java'
 rootProject.name='Pulse App'

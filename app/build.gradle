@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdk 33
     defaultConfig {
         applicationId "tan.philip.nrf_ble"
         minSdkVersion 26
@@ -46,6 +46,6 @@ dependencies {
     }
     implementation("org.greenrobot:eventbus:3.3.1")
     
-    implementation files('libs/liblsl-Java-debug.aar')
-    //implementation project(':libs:liblsl-Java')
+    //implementation files('libs/liblsl-Java-debug.aar')
+    implementation project(':liblsl-Java')
 }
