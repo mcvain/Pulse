@@ -104,6 +104,9 @@ public class BLEPacketParser {
 
             // Send to LSL before storing into ArrayList
             int[] dataArr = new int[]{cur_data};
+            if (index == 4) {
+                ecg_outlet.push_chunk(dataArr, packet_received_time);
+            }
             if (index == 6) {
                 packet_outlet.push_chunk(dataArr, packet_received_time);
             }
