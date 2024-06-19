@@ -45,6 +45,24 @@ public class BLEPacketParser {
     public LSL.StreamOutlet ecg_outlet;
     public LSL.StreamOutlet temp_outlet;
     public LSL.StreamOutlet packet_outlet;
+
+
+    // LSL variables (EEG/EOG e-tattoo)
+    public LSL.StreamInfo eeg1_info;
+    public LSL.StreamInfo eeg2_info;
+    public LSL.StreamInfo eeg3_info;
+    public LSL.StreamInfo eeg4_info;
+    public LSL.StreamInfo eogh_info;
+    public LSL.StreamInfo eogv_info;
+    public LSL.StreamInfo forehead_packet_info;
+    public LSL.StreamOutlet eeg1_outlet;
+    public LSL.StreamOutlet eeg2_outlet;
+    public LSL.StreamOutlet eeg3_outlet;
+    public LSL.StreamOutlet eeg4_outlet;
+    public LSL.StreamOutlet eogh_outlet;
+    public LSL.StreamOutlet eogv_outlet;
+    public LSL.StreamOutlet forehead_packet_outlet;
+
     private String connected_device_address;
 
     //Use this to instantiate a new BLEPackageParser object
@@ -112,25 +130,49 @@ public class BLEPacketParser {
 
             // Send to LSL before storing into ArrayList
             int[] dataArr = new int[]{cur_data};
+//            switch (index) {
+//                case 0:
+//                    scg_x_outlet.push_chunk(dataArr, packet_received_time);
+//                    break;
+//                case 1:
+//                    scg_y_outlet.push_chunk(dataArr, packet_received_time);
+//                    break;
+//                case 2:
+//                    scg_z_outlet.push_chunk(dataArr, packet_received_time);
+//                    break;
+//                case 3:
+//                    ecg_outlet.push_chunk(dataArr, packet_received_time);
+//                    break;
+//                case 4:
+//                    packet_outlet.push_chunk(dataArr, packet_received_time);
+//                    break;
+//                case 5:
+//                    temp_outlet.push_chunk(dataArr, packet_received_time);
+//                    break;
+//                default:
+//                    break;
+//            }
             switch (index) {
                 case 0:
-                    scg_x_outlet.push_chunk(dataArr, packet_received_time);
+                    eeg1_outlet.push_chunk(dataArr, packet_received_time);
                     break;
                 case 1:
-                    scg_y_outlet.push_chunk(dataArr, packet_received_time);
+                    eeg2_outlet.push_chunk(dataArr, packet_received_time);
                     break;
                 case 2:
-                    scg_z_outlet.push_chunk(dataArr, packet_received_time);
+                    eeg3_outlet.push_chunk(dataArr, packet_received_time);
                     break;
                 case 3:
-                    ecg_outlet.push_chunk(dataArr, packet_received_time);
+                    eeg4_outlet.push_chunk(dataArr, packet_received_time);
                     break;
                 case 4:
-                    packet_outlet.push_chunk(dataArr, packet_received_time);
+                    eogh_outlet.push_chunk(dataArr, packet_received_time);
                     break;
                 case 5:
-                    temp_outlet.push_chunk(dataArr, packet_received_time);
+                    eogv_outlet.push_chunk(dataArr, packet_received_time);
                     break;
+                case 8:
+                    forehead_packet_outlet.push_chunk(dataArr, packet_received_time);
                 default:
                     break;
             }
@@ -296,13 +338,31 @@ public class BLEPacketParser {
         temp_info = new LSL.StreamInfo("Pulse-Temp-"+connected_device_address,"misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
         packet_info = new LSL.StreamInfo("Pulse-Packet-"+connected_device_address,"misc",1, 10, LSL.ChannelFormat.float32,"myuid4563");
 
+        eeg1_info = new LSL.StreamInfo("Pulse-EEG1-"+connected_device_address,"EEG",1, 250, LSL.ChannelFormat.float32,"myuid4563");
+        eeg2_info = new LSL.StreamInfo("Pulse-EEG2-"+connected_device_address,"EEG",1, 250, LSL.ChannelFormat.float32,"myuid4563");
+        eeg3_info = new LSL.StreamInfo("Pulse-EEG3-"+connected_device_address,"EEG",1, 250, LSL.ChannelFormat.float32,"myuid4563");
+        eeg4_info = new LSL.StreamInfo("Pulse-EEG4-"+connected_device_address,"EEG",1, 250, LSL.ChannelFormat.float32,"myuid4563");
+        eogh_info = new LSL.StreamInfo("Pulse-hEOG-"+connected_device_address,"EEG",1, 250, LSL.ChannelFormat.float32,"myuid4563");
+        eogv_info = new LSL.StreamInfo("Pulse-vEOG-"+connected_device_address,"EEG",1, 250, LSL.ChannelFormat.float32,"myuid4563");
+        forehead_packet_info = new LSL.StreamInfo("Pulse-Packet-"+connected_device_address,"misc",1, 1, LSL.ChannelFormat.float32,"myuid4563");
+
+//        try {
+//            scg_x_outlet = new LSL.StreamOutlet(scg_x_info);
+//            scg_y_outlet = new LSL.StreamOutlet(scg_y_info);
+//            scg_z_outlet = new LSL.StreamOutlet(scg_z_info);
+//            ecg_outlet = new LSL.StreamOutlet(ecg_info);
+//            temp_outlet = new LSL.StreamOutlet(temp_info);
+//            packet_outlet = new LSL.StreamOutlet(packet_info);
+//        }
         try {
-            scg_x_outlet = new LSL.StreamOutlet(scg_x_info);
-            scg_y_outlet = new LSL.StreamOutlet(scg_y_info);
-            scg_z_outlet = new LSL.StreamOutlet(scg_z_info);
-            ecg_outlet = new LSL.StreamOutlet(ecg_info);
-            temp_outlet = new LSL.StreamOutlet(temp_info);
-            packet_outlet = new LSL.StreamOutlet(packet_info);
+            eeg1_outlet = new LSL.StreamOutlet(eeg1_info);
+            eeg2_outlet = new LSL.StreamOutlet(eeg2_info);
+            eeg3_outlet = new LSL.StreamOutlet(eeg3_info);
+            eeg4_outlet = new LSL.StreamOutlet(eeg4_info);
+            eogh_outlet = new LSL.StreamOutlet(eogh_info);
+            eogv_outlet = new LSL.StreamOutlet(eogv_info);
+            forehead_packet_outlet = new LSL.StreamOutlet(forehead_packet_info);
+
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -459,7 +519,7 @@ public class BLEPacketParser {
         }
 
     }
-    
+
     private ArrayList<String> gatherSubHeadings(ArrayList<String> lines, int curLine) {
         ArrayList<String> out = new ArrayList<String>();
         for(int i = curLine; i < lines.size(); i ++) {
@@ -468,7 +528,7 @@ public class BLEPacketParser {
 
             out.add(lines.get(i));
         }
-        
+
         return out;
     }
 
